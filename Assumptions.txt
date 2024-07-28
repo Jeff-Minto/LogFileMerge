@@ -1,0 +1,10 @@
+Assumptions
+
+1. The log files are produced once per day with a maximum of 10,000 rows in each.
+
+2. Logs should not be written to or be created while the merge application is running.
+
+3. The application should be ran just before midnight and the next day log created just after 
+   midnight when the application is finished running for the day.
+
+4. All Log files will be deleted when the archive file is created.
