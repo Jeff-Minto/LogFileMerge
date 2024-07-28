@@ -10,7 +10,7 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
 {
     internal class LogsMergeRepository : ILogsMergeRepository
     {
-        private IDictionary<DateTime, string> logEntries = new Dictionary<DateTime, string>();
+        private IDictionary<DateTime, string> _logEntries = new Dictionary<DateTime, string>();
 
         /// <summary>
         /// Process log files in specified directories and merge and sort into a single archive file
@@ -30,6 +30,7 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
             // Process each log file
             foreach (string? logFilePath in logFileLocations)
             {
+                // Directory specified must exist
                 if (Directory.Exists(logFilePath))
                 {                   
                     string[] logfiles = Directory.GetFiles(logFilePath);
@@ -49,23 +50,25 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
 
             // Sort dictionary by log entry date time 
             IOrderedEnumerable<KeyValuePair<DateTime, string>> orderedMergeLog 
-                = logEntries.OrderBy(x => x.Key);
+                = _logEntries.OrderBy(x => x.Key);
 
             if (Directory.Exists(mergedFilePath))
             {
-                
+                // Create archive file and add sorted items 
                 using (StreamWriter outfile =
                     File.CreateText(mergedFilePath + "Archive_" + DateTime.Now.ToString("yyyy-MM-dd") + ".log"))
                 {
                     foreach (var item in orderedMergeLog)
                     {
+                        // Format datetime back to expected sting format before writing to archive file
                         outfile.WriteLine(item.Key.ToString("yyyy-MM-dd hh:mm:ss.fff") + " " + item.Value);
                     }
                 }
 
+                // Delete log files 
                 foreach (string? cleanFilePath in logFileLocations)
                 {
-                    if (cleanFilePath is not null)
+                    if (cleanFilePath != null)
                     {
                         DirectoryInfo dir = new DirectoryInfo(cleanFilePath);
 
@@ -125,7 +128,7 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
                     // Need to reack each line so the data can be formatted into a suitable type for sorting
                     string? line = sr.ReadLine();
 
-                    if (line is not null)
+                    if (line != null)
                     {
                         // Extract Date and Message
                         string date = line.Substring(0, 23);
@@ -135,7 +138,7 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
                         // string
                         var logDate = DateTime.Parse(date);
 
-                        logEntries.Add(logDate, message);
+                        _logEntries.Add(logDate, message);
                     }
                 }
             }

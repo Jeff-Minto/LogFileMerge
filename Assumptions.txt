@@ -8,3 +8,5 @@ Assumptions
    midnight when the application is finished running for the day.
 
 4. All Log files will be deleted when the archive file is created.
+
+5. The Archive location should have an existing folder called 'Archive'
