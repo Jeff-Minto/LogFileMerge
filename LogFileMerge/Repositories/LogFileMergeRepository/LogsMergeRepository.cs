@@ -65,7 +65,7 @@ namespace LogFileMerge.Repositories.LogFileMergeRepository
                     }
                 }
 
-                // Delete log files 
+                // Delete the source log files 
                 foreach (string? cleanFilePath in logFileLocations)
                 {
                     if (cleanFilePath != null)
